@@ -45,7 +45,7 @@ public class WeatherAggregationService {
 				city,
 				avgTemp,
 				avgFeelsLike,
-				(int) Math.round(avgHumidity),  // Округляем до целого
+				(int) Math.round(avgHumidity),
 				avgWindSpeed
 		));
 	}
