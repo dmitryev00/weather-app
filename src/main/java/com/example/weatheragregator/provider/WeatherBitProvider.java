@@ -10,11 +10,18 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class WeatherBitProvider implements WeatherProvider{
 
-	RestTemplate restTemplate = new RestTemplate();
+	private final RestTemplate restTemplate;
+	private final String apiKey;
 
+	public WeatherBitProvider(@Value("${weatherbit.api.key}") String apiKey) {
+		this.restTemplate = new RestTemplate();
+		this.apiKey = apiKey;
+	}
 
-	@Value("${weatherbit.api.key}")
-	private String apiKey;
+	public WeatherBitProvider(RestTemplate restTemplate, String apiKey) {
+		this.restTemplate = restTemplate;
+		this.apiKey = apiKey;
+	}
 
 
 	@Override
