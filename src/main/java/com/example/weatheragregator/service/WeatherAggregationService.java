@@ -1,12 +1,16 @@
-package com.example.weatheragregator.controller.service;
+package com.example.weatheragregator.service;
 
-import com.example.weatheragregator.controller.service.provider.WeatherProvider;
+import com.example.weatheragregator.provider.WeatherProvider;
 import com.example.weatheragregator.dto.provider.internal.WeatherData;
 import com.example.weatheragregator.dto.provider.internal.WeatherResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,6 +26,8 @@ public class WeatherAggregationService {
 
 	}
 
+
+	@Cacheable(value = "weatherCache", key = "#city")
 	public WeatherResponse getWeather(String city) {
 
 		log.debug("Начало агрегации для города: {}", city);
@@ -68,5 +74,12 @@ public class WeatherAggregationService {
 				(int) Math.round(avgHumidity),
 				avgWindSpeed
 		));
+	}
+
+
+	@Scheduled(fixedRate = 10 * 60 * 1000)
+	@CacheEvict(value = "weatherCache", allEntries = true)
+	public void clearCache() {
+		log.debug("Кэш очищен:{}",new Date());
 	}
 }

@@ -1,4 +1,4 @@
-package com.example.weatheragregator.controller.service.provider;
+package com.example.weatheragregator.provider;
 
 import com.example.weatheragregator.dto.provider.external.WeatherBitResponse;
 import com.example.weatheragregator.dto.provider.internal.WeatherData;
