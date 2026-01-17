@@ -10,10 +10,18 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class WeatherApiProvider implements WeatherProvider{
 
-	RestTemplate restTemplate = new RestTemplate();
+	private final RestTemplate restTemplate;
+	private final String apiKey;
 
-	@Value("${weatherapi.api.key}")
-	private String apiKey;
+	public WeatherApiProvider(@Value("${weatherapi.api.key}") String apiKey) {
+		this.restTemplate = new RestTemplate();
+		this.apiKey = apiKey;
+	}
+
+	public WeatherApiProvider(RestTemplate restTemplate, String apiKey) {
+		this.restTemplate = restTemplate;
+		this.apiKey = apiKey;
+	}
 
 	@Override
 	public WeatherData getWeather(String city) {
@@ -22,14 +30,18 @@ public class WeatherApiProvider implements WeatherProvider{
 				apiKey,
 				city
 		);
-		WeatherApiResponse weatherApiResponse = restTemplate.getForObject(
+		WeatherApiResponse response = restTemplate.getForObject(
 				url,
 				WeatherApiResponse.class
 		);
 
-		var data = weatherApiResponse.current();
+		if (response == null || response.location() == null || response.current() == null) {
+			throw new RuntimeException("Нет данных от WeatherApi");
+		}
 
-		String cityName = weatherApiResponse.location().name();
+		var data = response.current();
+
+		String cityName = response.location().name();
 
 		return new WeatherData(
 				cityName,
