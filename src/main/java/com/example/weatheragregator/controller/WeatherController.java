@@ -1,6 +1,6 @@
 package com.example.weatheragregator.controller;
 
-import com.example.weatheragregator.controller.service.WeatherAggregationService;
+import com.example.weatheragregator.service.WeatherAggregationService;
 import com.example.weatheragregator.dto.provider.internal.WeatherResponse;
 import org.springframework.web.bind.annotation.*;
 
